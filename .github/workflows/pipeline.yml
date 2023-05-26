@@ -20,8 +20,13 @@ jobs:
       # Ajout du SDK d'Android pour pouvoir faire builder notre application
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
-      # Ici, l'instruction sert à utiliser la version de Gradle contenu dans le projet c'est à dire celle définit dans le gradle-wrapper.properties
+        # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: java
       # L'utilité c'est que tout le monde utilise ainsi la même version de Gradle pour éviter des problèmes de comptabilité entre développeur et nos CI
+      # Ici, l'instruction sert à utiliser la version de Gradle contenu dans le projet c'est à dire celle définit dans le gradle-wrapper.properties
       - uses: actions/cache@v2
         with:
           path: |
@@ -36,3 +41,7 @@ jobs:
       # Permet de réaliser un build de l'application
       - name: Generate app bundle.
         run: ./gradlew app:bundleRelease --stacktrace
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:java
